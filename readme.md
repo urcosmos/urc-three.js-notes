@@ -1,3 +1,3 @@
-## Бесплатный курс по three.js от [webvkube.ru](webvkube.ru)
+## Бесплатный курс по three.js от [webvkube.ru](http://webvkube.ru)
 ---
 Ссылки:

@@ -1,1 +1,3 @@
-app/
+typings/
+typings.json
+# www/build/three.module.js

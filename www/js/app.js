@@ -1,6 +1,6 @@
 import * as THREE from '../build/three.module.js';
 
-// __________   Урок 3. Создаем простую сцену   __________
+// __________   Урок 3 и 4. Создаем простую сцену   __________
 
 export default {
   init: function () {
@@ -13,7 +13,7 @@ export default {
       })
     );
     // this.scene.add(this.cube);
-
+    // this.cube.visible = false;
     // this.camera = new THREE.OrthographicCamera(innerWidth / -500, innerWidth / 500, innerHeight / 500, innerHeight / -500, 0.1, 1000);
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.z = 5;
@@ -21,8 +21,6 @@ export default {
 
     this.light = new THREE.HemisphereLight(0x0066bb, 0xaa6666, 1);
     this.scene.add(this.light, this.cube, this.camera);
-
-
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(innerWidth, innerHeight);

@@ -1,14 +1,14 @@
 import * as THREE from '../build/three.module.js';
 
 // START
-// __________   Урок 5. Перемещение и векторы   __________
+// __________   Урок 5. Перемещение и векторы + ДЗ  __________
 
 export default {
   init: function () {
     this.scene = new THREE.Scene();
 
     this.cube = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.BoxGeometry(2.5, 1, 1),
       new THREE.MeshStandardMaterial({
         color: 0xffffff,
       })
@@ -20,9 +20,31 @@ export default {
         color: 0x00ffff,
       })
     );
+    this.sphere2 = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: 0xffbbff,
+      })
+    );
+    this.sphere3 = new THREE.Mesh(
+      new THREE.SphereGeometry(1.5, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: 0x99cc88,
+      })
+    );
+    this.sphere4 = new THREE.Mesh(
+      new THREE.SphereGeometry(0.5, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: 0x99ff00,
+      })
+    );
 
-    this.cube.position.set(0, 0, 0);
-    this.sphere.position.set(3, 3, 0);
+    this.sphere.position.set(0, 3, 0);
+    this.sphere2.position.set(3.5, 0, 0);
+    this.sphere3.position.set(0, -5, 0);
+    this.sphere4.position.set(-4, 1, 0);
+    this.cube.position.add(this.sphere.position);
+
 
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.z = 8;
@@ -31,13 +53,14 @@ export default {
 
     this.light = new THREE.HemisphereLight(0xffffff, 0xaa6666, 1);
 
-    this.cube.add(this.sphere);
+    this.scene.add(this.sphere);
     this.scene.add(this.light, this.cube, this.camera);
+    this.scene.add(this.sphere2, this.sphere3, this.sphere4);
 
-    this.direction = new THREE.Vector3(1, 2, 3);
-    this.dir2 = new THREE.Vector3(3, 2, 2);
-    this.dir3 = new THREE.Vector3(0.5, 0.5, 0.5);
-    // this.direction.subVectors(this.sphere.position, this.cube.position);
+    this.direction = new THREE.Vector3();
+    // this.dir2 = new THREE.Vector3(3, 2, 2);
+    // this.dir3 = new THREE.Vector3(0.5, 0.5, 0.5);
+    // this.direction.subVectors(this.sphere, this.sphere2);
 
     // this.direction.normalize();
     // this.direction.add(this.dir2);
@@ -89,9 +112,19 @@ export default {
     // }
     // this.sphere.translateY(0.01);
 
-    // this.direction.subVectors(this.sphere.position, this.cube.position);
-    // this.direction.setLength(0.01);
-    // this.cube.position.add(this.direction);
+    // if (this.cube.position == this.sphere.position) {
+    if (this.sphere.position.distanceToSquared(this.cube.position) <= 0.01) {
+      this.direction.subVectors(this.sphere2.position, this.sphere.position);
+    } else if (this.sphere2.position.distanceToSquared(this.cube.position) <= 0.01) {
+      this.direction.subVectors(this.sphere3.position, this.sphere2.position);
+    } else if (this.sphere3.position.distanceToSquared(this.cube.position) <= 0.01) {
+      this.direction.subVectors(this.sphere4.position, this.sphere3.position);
+    } else if (this.sphere4.position.distanceToSquared(this.cube.position) <= 0.01) {
+      this.direction.subVectors(this.sphere.position, this.sphere4.position);
+    }
+
+    this.direction.setLength(0.03);
+    this.cube.position.add(this.direction);
     // this.cube.rotation.z += 0.01;
     requestAnimationFrame(function () {
       that.update();

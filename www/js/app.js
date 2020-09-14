@@ -1,38 +1,26 @@
 import * as THREE from '../build/three.module.js';
 
 // START
-// __________   Урок 6. Повороты объектов   __________
+// __________   Урок 6. Повороты объектов ДЗ   __________
 
 export default {
   init: function () {
     this.scene = new THREE.Scene();
 
     this.cube = new THREE.Mesh(
-      new THREE.BoxGeometry(2.5, 1, 1),
+      new THREE.BoxGeometry(2, 2, 2),
       new THREE.MeshStandardMaterial({
-        color: 0xffffff,
+        color: 0xcccc00
       })
     );
 
-    this.sphereArray = [];
-    for (let i = 0; i < 5; i++) {
-      this.sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.5, 16, 16),
-        new THREE.MeshStandardMaterial({
-          color: 0x00ffff,
-        })
-      );
-      this.sphere.position.set(
-        ((Math.random() - 0.5) * 2) * 5,
-        ((Math.random() - 0.5) * 2) * 5,
-        0);
-      this.sphereArray.push(this.sphere);
-      this.scene.add(this.sphere);
-    }
+    this.angel = 0;
+    this.delta = Math.sqrt(1 * 1 + 1 * 1) - 1;
+    console.log('this.delta: ', this.delta);
+    this.isGoesUp = true;
 
-    this.sphere = this.sphereArray[0];
-    this.counter = 1;
-    
+    // this.axis = new THREE.Vector3(1, 1, 0).normalize();
+
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.z = 8;
 
@@ -40,7 +28,7 @@ export default {
 
     this.scene.add(this.light, this.cube, this.camera);
 
-    this.direction = new THREE.Vector3();
+    // this.direction = new THREE.Vector3();
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(innerWidth, innerHeight);
@@ -52,16 +40,18 @@ export default {
     let that = this;
     this.renderer.render(this.scene, this.camera);
 
-    this.direction.subVectors(this.sphereArray[this.counter].position, this.cube.position).setLength(0.1);
+    this.angel += -0.01;
+    this.cube.rotation.z = this.angel;
 
-    this.cube.position.add(this.direction);
-  
-    if (this.cube.position.distanceTo(this.sphereArray[this.counter].position) <= 0.1 / 2) {
-      this.counter++;
-      if (this.counter >= this.sphereArray.length) {
-        this.counter = 0;
-      }
+    if (this.cube.position.y < 0) {
+      this.cube.position.y -= this.delta * 0.01;
+    } else if (this.cube.position.y > this.delta) {
+      this.cube.position.y += this.delta * 0.01;
     }
+    
+   
+    // this.angle += 0.1;
+    // this.cube.quaternion.setFromAxisAngle(this.axis, this.angle);
     requestAnimationFrame(function () {
       that.update();
     });
@@ -75,7 +65,7 @@ export default {
 
 
 // START
-// __________   Урок 6. Повороты объектов ДЗ __________
+// __________   Урок 6. Повороты объектов. Решение ДЗ из урока 5  __________
 
 // export default {
 //   init: function () {
@@ -106,7 +96,7 @@ export default {
 
 //     this.sphere = this.sphereArray[0];
 //     this.counter = 1;
-    
+
 //     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
 //     this.camera.position.z = 8;
 
@@ -129,7 +119,7 @@ export default {
 //     this.direction.subVectors(this.sphereArray[this.counter].position, this.cube.position).setLength(0.1);
 
 //     this.cube.position.add(this.direction);
-  
+
 //     if (this.cube.position.distanceTo(this.sphereArray[this.counter].position) <= 0.1 / 2) {
 //       this.counter++;
 //       if (this.counter >= this.sphereArray.length) {
@@ -142,7 +132,7 @@ export default {
 //   }
 // };
 
-// __________   Урок 6. Повороты объектов  __________
+// __________   Урок 6. Повороты объектов. Решение ДЗ из урока 5  __________
 // END
 
 // START

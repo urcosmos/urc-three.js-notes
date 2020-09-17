@@ -9,38 +9,35 @@ export default {
 
     this.cube = new THREE.Mesh(
       new THREE.BoxGeometry(2, 2, 2),
+      // new THREE.BoxGeometry(2, 2, 2),
       new THREE.MeshStandardMaterial({
-        color: 0xcccc00
+        color: 0xcccc00,
+        // wireframe: true
       })
     );
 
-    this.plane = new THREE.Mesh(
-      new THREE.BoxGeometry(10, 0.5, 1),
-      new THREE.MeshStandardMaterial({
-        color: 0x00cccc,
-        wireframe: true
-      })
-    );
+    // this.plane = new THREE.Mesh(
+    //   new THREE.BoxGeometry(10, 0.5, 1),
+    //   new THREE.MeshStandardMaterial({
+    //     color: 0x00cccc,
+    //     wireframe: true
+    //   })
+    // );
+
+    console.log(this.cube.geometry);
+
 
     this.cube.position.set(0, 0, 0);
-    this.plane.position.y = -1.25;
-    this.direct = new THREE.Vector3(1, -1, 0);
-    this.axis = new THREE.Vector3(0, 0, -1);
-
-    this.speed = 0.5;
-    this.signX = 1;
-    this.signY = 1;
-    this.offsetY = (Math.sqrt(2) - 1);
-    this.angel = Math.PI / 2 * 5 / 100;
-    this.maxAngel = 0;
-
-    this.camera = new THREE.OrthographicCamera(innerWidth / -100, innerWidth / 100, innerHeight / 100, innerHeight / -100, 0.1, 100);
-    // this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+    this.cube.rotation.x = 1;
+    this.cube.rotation.y = 1;
+       
+    // this.camera = new THREE.OrthographicCamera(innerWidth / -100, innerWidth / 100, innerHeight / 100, innerHeight / -100, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
     this.camera.position.z = 8;
 
     this.light = new THREE.HemisphereLight(0xffffff, 0xaa6666, 1);
 
-    this.scene.add(this.light, this.cube, this.camera, this.plane);
+    this.scene.add(this.light, this.cube, this.camera);
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(innerWidth, innerHeight);
@@ -52,57 +49,7 @@ export default {
     let that = this;
     this.renderer.render(this.scene, this.camera);
 
-    // И второе решение, с нужным поднятием кубика
-
-    if (this.cube.position.x >= 5) {
-      this.signX = -1;
-      this.cube.rotation.z = 0;
-      this.cube.position.x = 5;
-      this.cube.position.y = 0;
-      this.maxAngel = 0;
-      this.direct.set(1, -1, 0);
-    } else if (this.cube.position.x <= -5) {
-      this.signX = 1;
-      this.cube.rotation.z = 0;
-      this.cube.position.x = -5;
-      this.cube.position.y = 0;
-      this.maxAngel = 0;
-      this.direct.set(1, -1, 0);
-    }
-
-    this.cube.position.x += 0.1 * this.signX * this.speed;
-    this.cube.rotation.z -= this.signX * this.angel * this.speed;
-
-    if (this.maxAngel <= -Math.PI / 4) {
-      this.maxAngel = -Math.PI / 4;
-      this.signY = -1;
-    } else if (this.maxAngel >= 0) {
-      this.maxAngel = 0;
-      this.signY = 1;
-    }
-
-    let an = this.signY * this.angel * this.speed;
-
-    this.direct.applyAxisAngle(this.axis, an);
-    this.cube.position.y = -this.direct.y-1;
-
-    this.maxAngel -= an;
-    // Это первое решение с проваливанием кубика под землю
-    // if (this.cube.position.x >= 5) {
-    //   this.signX = -1;
-    // } else if (this.cube.position.x <= -5) {
-    //   this.signX = 1;
-    // }
-
-    // this.cube.position.x += 0.1 * this.signX * this.speed;
-    // this.cube.rotation.z -= this.signX * this.angel * this.speed;
-
-    // if (this.cube.position.y > this.offsetY) {
-    //   this.signY = -1;
-    // } else if (this.cube.position.y < 0) {
-    //   this.signY = 1;
-    // }
-
+    
     // this.cube.position.y += this.offsetY / 10 * this.signY * this.speed;
     requestAnimationFrame(function () {
       that.update();

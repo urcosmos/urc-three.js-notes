@@ -23,6 +23,11 @@
   <script type="module">
     import app from './js/app.js';
     app.init();
+
+    let canvas = document.getElementsByTagName('canvas');
+    canvas.onclick = function () {
+      app.update();
+    };
   </script>
 
 <!-- ________________________________________ -->

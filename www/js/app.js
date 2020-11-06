@@ -1,7 +1,9 @@
 import * as THREE from '../build/three.module.js';
 
+
 // START
-// __________   Урок 7. Геометрия объекта ДЗ   __________
+// __________   Урок 8. Правильное ДЗ из урока 7   __________
+
 
 export default {
   init: function () {
@@ -9,14 +11,15 @@ export default {
     let texture = new THREE.TextureLoader().load('./textures/one_1024.jpg');
 
     this.cube = new THREE.Mesh(
-      new THREE.PlaneGeometry(16, 16, 32, 32),
+      new THREE.PlaneGeometry(10, 10, 100, 100),
       // new THREE.BoxGeometry(2, 2, 2),
       // new THREE.BoxGeometry(2, 2, 2),
       new THREE.MeshStandardMaterial({
         color: 0xffffff,
-        wireframe: true,
+        // wireframe: true,
         map: texture,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        flatShading: true
 
       })
     );
@@ -25,15 +28,18 @@ export default {
     this.cube.rotation.x = -(Math.PI / 4);
     console.log('this.cube: ', this.cube.geometry);
 
-    this.up = 2;
-    this.down = -2;
-    this.speed = 0.3;
 
-    this.distance = 0.001;
+    this.center = new THREE.Vector2(0, 0);
+    this.targetDistance = 0;
+    this.height = 0.1;
+    this.speed = 0.1;
+    this.width = 1;
+    this.tempV = new THREE.Vector2();
 
-    this.centerVertex = Math.floor(this.cube.geometry.vertices.length / 2);
-    console.log('this.centerVertex: ', this.centerVertex);
-    this.sign = 1;
+
+    // this.centerVertex = Math.floor(this.cube.geometry.vertices.length / 2);
+    // console.log('this.centerVertex: ', this.centerVertex);
+    // this.sign = 1;
 
     // this.camera = new THREE.OrthographicCamera(innerWidth / -100, innerWidth / 100, innerHeight / 100, innerHeight / -100, 0.1, 100);
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -46,7 +52,9 @@ export default {
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(innerWidth, innerHeight);
     document.body.appendChild(this.renderer.domElement);
+    // this.updatePool();
     this.update();
+
 
   },
 
@@ -54,24 +62,29 @@ export default {
     let that = this;
     this.renderer.render(this.scene, this.camera);
 
+    let distance;
+    for (let v of this.cube.geometry.vertices) {
+      this.tempV.copy(v);
+      distance = this.tempV.distanceTo(this.center);
+      if (distance > this.targetDistance - this.width &&
+        distance < this.targetDistance + this.width) {
+          if (distance <= this.targetDistance) {
+            v.z = (this.width - (this.targetDistance - distance)) / this.width * this.height;
+          } else if (distance > this.targetDistance) {
+            v.z = (this.width - (distance - this.targetDistance)) / this.width * this.height;
+          }
+      } else {
+        v.z = 0;
+      }
+    }
+
     this.cube.geometry.verticesNeedUpdate = true;
 
-    for (let i = 0; i < this.cube.geometry.vertices.length; i++) {
-      if (this.cube.geometry.vertices[i].distanceToSquared(this.cube.geometry.vertices[this.centerVertex]) <= this.distance) {
-        if (this.cube.geometry.vertices[i].z >= this.up) {
-          this.sign = -1;
-        } else if (this.cube.geometry.vertices[i].z <= this.down) {
-          this.sign = 1;
-        }
-        this.cube.geometry.vertices[i].z += this.speed * this.sign;
-      }
-      if (this.cube.geometry.vertices[i].distanceToSquared(this.cube.geometry.vertices[this.centerVertex]) < this.distance - 10) {
-        this.cube.geometry.vertices[i].z = 0;
+    this.targetDistance += this.speed;
 
-      }
-      this.distance += 0.003;
+    if (this.targetDistance > 10) {
+      this.targetDistance = 0;
     }
- 
 
     requestAnimationFrame(function () {
       that.update();
@@ -80,6 +93,92 @@ export default {
   },
 
 };
+
+// __________   Урок 8. Правильное ДЗ из урока 7   __________
+// END
+
+// START
+// __________   Урок 7. Геометрия объекта ДЗ   __________
+
+// export default {
+//   init: function () {
+//     this.scene = new THREE.Scene();
+//     let texture = new THREE.TextureLoader().load('./textures/one_1024.jpg');
+
+//     this.cube = new THREE.Mesh(
+//       new THREE.PlaneGeometry(16, 16, 100, 100),
+//       // new THREE.BoxGeometry(2, 2, 2),
+//       // new THREE.BoxGeometry(2, 2, 2),
+//       new THREE.MeshStandardMaterial({
+//         color: 0xffffff,
+//         // wireframe: true,
+//         map: texture,
+//         side: THREE.DoubleSide,
+//         flatShading: true
+
+//       })
+//     );
+//     this.cube.position.set(0, 0, 0);
+//     this.cube.rotation.z = -0.5;
+//     this.cube.rotation.x = -(Math.PI / 4);
+//     console.log('this.cube: ', this.cube.geometry);
+
+//     this.up = 0.2;
+//     this.down = -0.2;
+//     this.speed = 0.1;
+
+//     this.distance = 0.0001;
+
+//     this.centerVertex = Math.floor(this.cube.geometry.vertices.length / 2);
+//     console.log('this.centerVertex: ', this.centerVertex);
+//     this.sign = 1;
+
+//     // this.camera = new THREE.OrthographicCamera(innerWidth / -100, innerWidth / 100, innerHeight / 100, innerHeight / -100, 0.1, 100);
+//     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+//     this.camera.position.z = 13;
+
+//     this.light = new THREE.HemisphereLight(0xffffff, 0xaa6666, 1);
+
+//     this.scene.add(this.light, this.cube, this.camera);
+
+//     this.renderer = new THREE.WebGLRenderer();
+//     this.renderer.setSize(innerWidth, innerHeight);
+//     document.body.appendChild(this.renderer.domElement);
+//     this.update();
+
+
+//   },
+
+//   update: function () {
+//     let that = this;
+//     this.renderer.render(this.scene, this.camera);
+
+//     this.cube.geometry.verticesNeedUpdate = true;
+
+//     for (let i = 0; i < this.cube.geometry.vertices.length; i++) {
+//       if (this.cube.geometry.vertices[i].distanceToSquared(this.cube.geometry.vertices[this.centerVertex]) <= this.distance) {
+//         if (this.cube.geometry.vertices[i].z >= this.up) {
+//           this.sign = -1;
+//         } else if (this.cube.geometry.vertices[i].z <= this.down) {
+//           this.sign = 1;
+//         }
+//         this.cube.geometry.vertices[i].z += this.speed * this.sign;
+//       }
+//       if (this.cube.geometry.vertices[i].distanceToSquared(this.cube.geometry.vertices[this.centerVertex]) < this.distance - 10) {
+//         this.cube.geometry.vertices[i].z = 0;
+
+//       }
+//       this.distance += 0.0002;
+//     }
+
+
+//     requestAnimationFrame(function () {
+//       that.update();
+//     });
+
+//   },
+
+// };
 
 // __________   Урок 7. Геометрия объекта ДЗ   __________
 // END

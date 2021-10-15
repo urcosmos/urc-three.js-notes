@@ -518,16 +518,14 @@ geometry.computeVertexNormals();
 
 ```
 
-
 * **Куб**
 
 Может быть неравносторонним. Размеры в числах. Принимаем, что 1 = 1 м.
 
 ```javascript
-let boxGeometry = new THREE.BoxGeometry(ширина, высота, глубина); // обычная геометрия
+let boxGeometry = new THREE.BoxGeometry(ширина, высота, глубина, подразделение по x, .. по y, .. по z ); // обычная геометрия, подразделение означает subdivision
 let boxGeometry = new THREE.BoxBufferGeometry(ширина, высота, глубина); // буфферная геометрия
 ```
-
 
 * **Сфера**
 

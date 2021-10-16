@@ -909,6 +909,20 @@ const controls = new OrbitControls(camera, canvas); // достаточно пр
 .update();
 ```
 
+* **Debug GUI**
+
+Для UI дебага можно использовать:
+1. dat.gui (https://github.com/dataarts/dat.gui).
+2. Control-panel (https://github.com/freeman-lab/control-panel).
+3. ControlKit (https://github.com/automat/controlkit.js).
+4. Guify (https://github.com/colejd/guify).
+5. Oui (https://github.com/wearekuva/oui).
+
+
+
+
+
+
 
 
 <!-- Ссылки -->

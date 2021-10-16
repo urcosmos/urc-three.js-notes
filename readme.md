@@ -918,12 +918,8 @@ const controls = new OrbitControls(camera, canvas); // достаточно пр
 4. Guify (https://github.com/colejd/guify).
 5. Oui (https://github.com/wearekuva/oui).
 
-
-
-
-
-
-
+По dat.gui посмотри пример использования:
+https://jsfiddle.net/ikatyang/182ztwao/
 
 <!-- Ссылки -->
 [toc]: #содержание

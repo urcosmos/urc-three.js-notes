@@ -822,10 +822,11 @@ let eul = new THREE.Euler(x, y, z, 'XYZ');
 
 * **Текстурный лоадер**
 
-Наследуется от `Loader`.
+Наследуется от `Loader`. Текстурный лоадер можно объявить один раз и потом его использовать для загрузки больше одной текстуры.
 
 ```javascript
-let texture = new THREE.TextureLoader()
+let textureLoader = new THREE.TextureLoader();
+let texture = textureLoader.load('pathToTexture');
 ```
 
 **Методы**

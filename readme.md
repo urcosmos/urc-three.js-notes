@@ -580,6 +580,8 @@ let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребе
 
 Ты можешь задать свойство `color` при инициалиации материала, но после ты не можешь просто присвоить ему значение (см. методы).
 
+ПОМНИ! что для карт ao, normal и т.д. нужно сделать uv-рзвертку новую uv2, которая будет совпадать со старой uv.
+
 <!-- TODO добавь описание параметров -->
 ```javascript
 let materialStandart = new THREE.MeshStandartMaterial({
@@ -794,6 +796,7 @@ let cameraPersp = new THREE.PerspectiveCamera(угол обзора,
 ```
 
 **Методы**
+
 ```javascript
 // Обновление матрицы - нужно постоянно при изменнеии какого-либо параметра камеры. Например, после обновления соотношения ширины/высоты (aspect ratio) при обновлении размеров окна
 .updateProjectionMatrix();
@@ -1124,8 +1127,6 @@ const controls = new OrbitControls(camera, canvas); // достаточно пр
 
 По dat.gui посмотри пример использования:
 https://jsfiddle.net/ikatyang/182ztwao/
-
-1
 
 <!-- Ссылки -->
 [toc]: #содержание

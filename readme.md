@@ -1125,6 +1125,8 @@ const controls = new OrbitControls(camera, canvas); // достаточно пр
 По dat.gui посмотри пример использования:
 https://jsfiddle.net/ikatyang/182ztwao/
 
+1
+
 <!-- Ссылки -->
 [toc]: #содержание
 [webvkube]: http://webvkube.ru

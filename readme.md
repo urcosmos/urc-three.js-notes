@@ -570,9 +570,13 @@ let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребе
 ### Материал
 [Вернуться к содержанию][toc]
 
-* **Стандартный материал**
+* **MeshBasicMaterial**
 
-Просто покрывает мэш в заданный цвет. В параметр материала передаются свойства в виде объекта { }. Задаются свойства цвета, шераховатости, прозрачности, металлизированности, карты нормалей, AO и т.д. Формат цвета `0x000000` - последние 6 цифр это RRGGBB в 16-ричной системе счисления от 0 до f.
+Аналог MeshStandartMaterial, но у него нет flatShading.
+
+* **MeshStandartMaterial**
+
+Это PBR материал. В параметр материала передаются свойства в виде объекта { }. Задаются свойства цвета, шераховатости, прозрачности, металлизированности, карты нормалей, AO и т.д. Формат цвета `0x000000` - последние 6 цифр это RRGGBB в 16-ричной системе счисления от 0 до f.
 
 Ты можешь задать свойство `color` при инициалиации материала, но после ты не можешь просто присвоить ему значение (см. методы).
 
@@ -589,19 +593,88 @@ let materialStandart = new THREE.MeshStandartMaterial({
 ```
 **Свойства**
 
+```javascript
+.metalness = ...; // помни, это будет сочетаться с картой металнесс
+.roughness = ...; // помни, это будет сочетаться с картой рафнесс
 
+.metalnessMap = path_to;
+.roughnessMap = path_to;
+
+.map = path_to; // для карты цвета/текстуры
+
+.aoMap = path_to; // для карты AmbientOcclusion
+
+.displacementMap = path_to; // для карты высот
+.displacementScale = ...; // масштаб высоты
+
+// Настроить прозрачность:
+.transparent = true; // def: false - сначала включи этот параметр
+.opacity = val; // потом поставь значение прозрачности от 0 до 1
+.alphaMap = path_to_alpha_texture; // или можно так подключать карту прозрачности
+
+.normalMap = path_to;
+.normalScale.set(x, y); // масштаб влияния карты
+```
 
 **Методы**
 
 ```javascript
 // Менять свойства можем так:
 .color.setHex(0x000000);
-
-// Настроить прозрачность:
-.transparent = true; // def: false - сначала включи этот параметр
-.opacity = val; // потом поставь значение прозрачности от 0 до 1
-.alphaMap = path_to_alpha_texture; // или можно так подключать карту прозрачности
 ```
+
+* **MeshNormalMaterial**
+
+
+* **MeshMatcapMaterial**
+
+Это нужно, чтобы брать цвета из маткапа.
+Примеры маткапов можешь посмотреть здесь: https://github.com/nidorx/matcaps, но помни, что нужно проверять лицензию на использование.
+
+Работает так:
+```javascript
+const mcTexture = path_to_matcap_texture;
+const material = new THREE.MeshMatcapMaterial();
+material.matcap = mcTexture;
+```
+
+* **MeshDetphMaterial**
+
+Красит в белый цвет объект при приближении к нему камеры. И в черный - при отдалении.
+
+* **MeshLambertMaterial**
+
+Реагирует на источниеи света. Эффективный материал, но у дает артефакты на мешах.
+
+* **MeshPhongMaterial**
+
+Почти тоже самое, что и ламберт материал, но нет артефектов на меше и дает отражение света интенсивнее. Он менее эффективен, чем ламберт материал.
+
+**Свойства**
+
+```javascript
+.shininess = ...; // сила отражающего света
+
+.specular = new THREE.Color(0xff0000); // цвет отражающего света
+```
+
+* **MeshToonMaterial**
+
+Мультяшный материал.
+
+**Свойства**
+
+```javascript
+.gradientMap = path_to_gradientMap; // можно подгрузить карту градиента, чтобы настроить тени. Но не забудь включить NearestFilter для мин- и магфильтра.
+```
+
+* **MeshPhysicalMaterial**
+
+Такой же как и стандартный материал, но с возможностью настраивать clear coat.
+
+* **PointsMaterial**
+
+Для частиц.
 
 * **Текстуры**
 
@@ -648,6 +721,19 @@ texture.wrapT = THREE.RepeatWrapping;
 // управлением размытием текстуры когда текстура слишком маленькая. Есть константы ближайший и линейный фильтр
 .magFilter = ...;
 
+```
+
+* **Текстуры окружения**
+
+Для загрузки нужен CubeTextureLoader. Так что готовь 6 картинок окруженя.
+Чтобы перевести из hdr в cubmap, можешь воспользоваться сервисом https://matheowis.github.io/HDRI-to-CubeMap/
+
+**Свойства**
+
+```javascript
+material.envMap = envMap;
+
+material1.envMapIntensity = 0.5;
 ```
 
 ### Сцена
@@ -741,6 +827,19 @@ let cameraOrto = new THREE.OrtographicCamera(innerWidth / -100, innerWidth / 100
 ```javascript
 let lightHemi = new THREE.HemisphereLight(цвет верхнего света, цвет нижнего света, интенсивность источника света)
 ```
+
+* **AmbientLight**
+
+```javascript
+const aL = new THREE.AmbientLight(color, intensity);
+```
+
+* **PointLight**
+
+```javascript
+const pL = new THREE.AmbientLight(color, intensity);
+```
+
 
 ### Вектор
 [Вернуться к содержанию][toc]
@@ -905,7 +1004,7 @@ let textureLoader = new THREE.TextureLoader(loadingManager);
 .onError = () => {}; // принимает функцию, которая будет вызвана при ошибке загрузки текстуры
 ```
 
-* **Текстурный лоадер**
+* **TextureLoader**
 
 Наследуется от `Loader`. Текстурный лоадер можно объявить один раз и потом его использовать для загрузки больше одной текстуры.
 
@@ -925,7 +1024,20 @@ let texture = textureLoader.load('pathToTexture');
 // четвертым - колбек-функция, которая выполнится, если в процессе загрузки будут ошибки
 ```
 
+* **CubeTextureLoader**
 
+Нужен для загрузки карт окужения. Загружает 6 карт. Порядок см. в документации. px nx py ny pz nz.
+
+```javascript
+let cubeTextureLoader = new THREE.CubeTextureLoader();
+let texture = cubeTextureLoader
+  .setPath('path_to_folder')
+  .load([
+    'px.jpg',
+    'nx.jpg',
+    ...
+  ]);
+```
 
 ### Рендер
 [Вернуться к содержанию][toc]

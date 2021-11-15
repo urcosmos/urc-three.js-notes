@@ -567,6 +567,11 @@ let boxGeometry = new THREE.BoxBufferGeometry(ширина, высота, глу
 let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребер по горизонтали, кол-во ребер по вертикали);
 ```
 
+* **TextBufferGeometry**
+
+Нужен typeface шрифт.
+
+
 ### Материал
 [Вернуться к содержанию][toc]
 
@@ -1040,6 +1045,21 @@ let texture = cubeTextureLoader
     'nx.jpg',
     ...
   ]);
+```
+
+* **FontLoader**
+
+Нужен для загрузки typeface шрифта. Помни, что мы не можем просто так в пееменную положить шрифт.
+Как с текстурой, например. Тут нужно запускать колбек-функцию. См. документацию.
+FontLoader переехал в `three/examples/jsm/loaders/FontLoader.js`.
+
+Создание текстовой буферной геометрии
+
+```javascript
+import { FontLoader, Font} from 'three/examples/jsm/loaders/FontLoader';
+
+const fontLoader = new FontLoader();
+fontLoader.load(path_to_font, func1, func2, func3);
 ```
 
 ### Рендер

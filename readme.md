@@ -308,7 +308,7 @@ export default {
 
 При создании геометрии нужно создать новую геометрию, потом к ней добавить вершин и добавить фейс. Все это массивы. Вершины добавляются как новые Vector3, фейсы - как новые Face3. Параметром в Face3 передается номера точек по порядку из массива vertices. Если перечисление точек идет против часовой стрелки по отношению к смотрящему, то созданный фейс будет виден - это его лицевая сторона. Если по часовой - то будем видеть заднюю сторону фейса. Обычно, она не видна. Тогда в материале нужно включать параметр `side: THREE.DoubleSide` (даблсайд - это константа).
 
-При добавлении UV развертки сначала делают пустой массив `.faceVertexUvs`, и этот массив содержит слои. Слои - это разные развертки. Т.е. у объекта могут быть разные развертки материалов, больше, чем одна. Только потом в эти слои добавляют фейсы, а в фейсы координаты точек развертки, только уже в 2d пространстве через Vector2. Потом надо обносить положение UV координат через включить `.uvsNeedUpdate;`. Это надо на массивах с большим количеством элементов, т.к. автоматически они могут не обновиться. осле нужно пересчитать границы через `.computeBoundingSphere();`. После нужно пересчитать нормали через `.computeVertexNormals();`.
+При добавлении UV развертки сначала делают пустой массив `.faceVertexUvs`, и этот массив содержит слои. Слои - это разные развертки. Т.е. у объекта могут быть разные развертки материалов, больше, чем одна. Только потом в эти слои добавляют фейсы, а в фейсы координаты точек развертки, только уже в 2d пространстве через Vector2. Потом надо обносить положение UV координат через включить `.uvsNeedUpdate;`. Это надо на массивах с большим количеством элементов, т.к. автоматически они могут не обновиться. После нужно пересчитать границы через `.computeBoundingSphere();`. После нужно пересчитать нормали через `.computeVertexNormals();`.
 
 Если нужно постоянно двигать точки, то в функции апдейт нужно постоянно включать `.verticesNeedUpdate`, т.к. этот флаг постоянно сбрасыавет в false.
 
@@ -536,6 +536,9 @@ geometry.setAttribute('position', posAtt);
 **Методы**
 
 ```javascript
+// центрировать геометрию в мэше (центр по bounding box)
+.center();
+
 // клонировать геометрию
 .clone();
 
@@ -544,10 +547,15 @@ geometry.setAttribute('position', posAtt);
 
 // расчитать сферу с радиусом самой дальней точкой объекта для того,
 // чтобы объект не отображался, если эта сфера не попадает в зону видимости камеры
-.computeBoudingSphere();
+.computeBoundingSphere();
+.computeBoundingBox();
 
 // пересчет нормали. Нужно после создания своей геометрии, чтобы инициализировать нормали
 .computeVertexNormals();
+
+// переместить геометрию внутри мэша (не сам мэш, а как детали в группе)
+// для буферной геометрии
+.translate(x, y, z);
 ```
 
 * **Куб**
@@ -567,17 +575,16 @@ let boxGeometry = new THREE.BoxBufferGeometry(ширина, высота, глу
 let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребер по горизонтали, кол-во ребер по вертикали);
 ```
 
-* **TextBufferGeometry**
+* **TextGeometry**
 
 Нужен typeface шрифт.
-
 
 ### Материал
 [Вернуться к содержанию][toc]
 
 * **MeshBasicMaterial**
 
-Аналог MeshStandartMaterial, но у него нет flatShading.
+Аналог MeshStandartMaterial, но у него нет flatShading. И ему нужен свет.
 
 * **MeshStandartMaterial**
 
@@ -838,6 +845,9 @@ let lightHemi = new THREE.HemisphereLight(цвет верхнего света, 
 
 * **AmbientLight**
 
+Его можно использовать как альтернативу для отраженного света. Ставь таким же цветом как, например, pointLight.
+
+
 ```javascript
 const aL = new THREE.AmbientLight(color, intensity);
 ```
@@ -845,9 +855,8 @@ const aL = new THREE.AmbientLight(color, intensity);
 * **PointLight**
 
 ```javascript
-const pL = new THREE.AmbientLight(color, intensity);
+const pL = new THREE.PointLight(color, intensity);
 ```
-
 
 ### Вектор
 [Вернуться к содержанию][toc]
@@ -1056,7 +1065,7 @@ FontLoader переехал в `three/examples/jsm/loaders/FontLoader.js`.
 Создание текстовой буферной геометрии
 
 ```javascript
-import { FontLoader, Font} from 'three/examples/jsm/loaders/FontLoader';
+import { FontLoader, Font } from 'three/examples/jsm/loaders/FontLoader';
 
 const fontLoader = new FontLoader();
 fontLoader.load(path_to_font, func1, func2, func3);

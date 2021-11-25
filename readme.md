@@ -833,11 +833,16 @@ let cameraOrto = new THREE.OrtographicCamera(innerWidth / -100, innerWidth / 100
 
 Наследуется от `Object3D`.
 
-* **Гемисферический** источник света.
+Лучше использовать как можно меньше источников света и менее ресурсозатратные.
+Наименее ресурснозатратные AmbienLight и HemisphereLight.
+Средние - DirectionalLight и PointLight.
+Самые затратные - SpotLight и RectAreaLight
+
+* **HemisphereLight**
 
 Наследуется от `Object3D -> Light`.
 
-Свет будет подаваться сверху и снизу. Цвета верхнего и нижнего света в формате `0x000000`; интенсивность в числах бери 1 для начала.
+Свет будет подаваться сверху и снизу. Цвета верхнего и нижнего света в формате `0x000000`; интенсивность в числах бери 1 для начала. Свет идет отовсюду.
 
 ```javascript
 let lightHemi = new THREE.HemisphereLight(цвет верхнего света, цвет нижнего света, интенсивность источника света)
@@ -846,7 +851,7 @@ let lightHemi = new THREE.HemisphereLight(цвет верхнего света, 
 * **AmbientLight**
 
 Его можно использовать как альтернативу для отраженного света. Ставь таким же цветом как, например, pointLight.
-
+Свет идет отовсюду.
 
 ```javascript
 const aL = new THREE.AmbientLight(color, intensity);
@@ -854,8 +859,86 @@ const aL = new THREE.AmbientLight(color, intensity);
 
 * **PointLight**
 
+Это точка, из которой идет свет.
+
 ```javascript
-const pL = new THREE.PointLight(color, intensity);
+const pL = new THREE.PointLight(color, intensity, distance, decay);
+```
+
+* **DirectionalLight**
+
+Это как солнце - лучи идут параллельно друг другу.
+
+```javascript
+const dL = new THREE.DirectionalLight(color, intensity);
+```
+
+* **RectAreaLight**
+
+Это прямоугольный источник света как лампа прямоугольная.
+Этот материал работает только с MeshStandartMaterial и MeshPhysicalMaterial.
+Также, можно двигать этот источник света и направлять его через метод `.lookAt()`.
+
+```javascript
+const rL = new THREE.PointLight(color, intensity, width, height);
+```
+
+* **SpotLight**
+
+Это как фонарик.
+
+Чтобы направлять этот свет, нужно обращаться к его свойству `.target`.
+Это невидимый `Object3D`, который еще и в сцену нужно добавить. И двигать нужно его.
+Это точка КУДА светит spotLight.
+
+```javascript
+const sL = new THREE.SpotLight(color, intensity, distance, angle, penumbra, decay);
+// angle - угол света
+// penumbra - величина размытия границ света
+```
+
+* **LightHelpers**
+
+Helpers показывают источники света, помогают определить положение источников света.
+
+```javascript
+// Hemisphere
+// 1й параметр - передаем источник света
+const hslh = new THREE.HemisphereLightHelper(lightHemi, 0.5);
+scene.add(hslh);
+
+// Directional
+const dlh = new THREE.DirectionalLightHelper(dL, 0.2);
+scene.add(dlh);
+
+// Point
+const plh = new THREE.PointLightHelper(pL, 0.2);
+scene.add(plh);
+
+// Spot
+const slh = new THREE.SpotLightHelper(sL);
+scene.add(slh);
+// Здесь еще нужно поставить в requestAnimationFrame обновление хелпера
+window.requestAnimationFrame( () => {
+  slh.update();
+})
+
+// RectArea
+// Сначала надо импортировать
+import {
+  RectAreaLightHelper
+} from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
+const ralh = new RectAreaLightHelper(rectL);
+scene.add(ralh);
+// Здесь еще нужно поставить в requestAnimationFrame обновление хелпера
+window.requestAnimationFrame( () => {
+  ralh.position.copy(rectL.position);
+  ralh.quaternion.copy(rectL.quaternion);
+})
+// или же можно добавить хелпер в источник света и не обновлять его
+const ralh = new RectAreaLightHelper(rectL);
+rectL.add(ralh);
+
 ```
 
 ### Вектор

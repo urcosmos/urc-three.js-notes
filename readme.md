@@ -452,6 +452,16 @@ scene.add(group);
 let mesh = new THREE.Mesh(геометрия, материал);
 ```
 
+**Свойства**
+
+```javascript
+// Отбрасывать тень на другие объекты
+.castShadow = true; // def: false
+
+// получать тень, отображать тень на себе
+.receiveShadow = true; // def: false
+```
+
 ### Геометрия
 [Вернуться к содержанию][toc]
 
@@ -836,7 +846,9 @@ let cameraOrto = new THREE.OrtographicCamera(innerWidth / -100, innerWidth / 100
 Лучше использовать как можно меньше источников света и менее ресурсозатратные.
 Наименее ресурснозатратные AmbienLight и HemisphereLight.
 Средние - DirectionalLight и PointLight.
-Самые затратные - SpotLight и RectAreaLight
+Самые затратные - SpotLight и RectAreaLight.
+
+**Свойства**
 
 * **HemisphereLight**
 
@@ -938,6 +950,57 @@ window.requestAnimationFrame( () => {
 // или же можно добавить хелпер в источник света и не обновлять его
 const ralh = new RectAreaLightHelper(rectL);
 rectL.add(ralh);
+```
+
+### Тени
+[Вернуться к содержанию][toc]
+
+Чтобы тени были в сцене, нужно сначала включить их в рендере. Помни, что shadowMap это такой же рендер, только из источника света.
+Также, в объектах (мешах) нужно включить отбрасывание теней и прием теней на себя (см. в объектах).
+Также, нужно и в источнике света указать `castShadow = true`, чтобы от источника света была тень.
+Это можно делать только для PointLight, DirectionalLight и SpotLight.
+
+Помнни, что shadowMap - это такой же рендер.
+И делается он из точки как будто камера смотрит по направлению света.
+Так что у (почти) каждого иосточника света есть "камера".
+И для улучшения качества теней нужно повысить разрешение этой "камеры", т.е. = разрешение shadowMap.
+
+Для показа области действия света, от которого будет тень, можно добавить `CameraHelper` в источнике света.
+
+Для камеры света можно регулировать геометирческие параметры. Top, Right, Bottom, Left, Near, Far.
+Важно задавать минмальные размеры камеры света как можно меньше, т.к. это влияет на качество shadowMap.
+
+Можно задать тип тени. Их 4. В порядке возрастания сложности.
+`THREE.BasicShadowMap, THREE.PCFShadowMap, THREE.PCFSoftShadowMap, THREE.VSMShadowMap`.
+Это свойствоо указывается в рендере.
+Для softShadowMap radius не работает.
+
+```javascript
+renderer.shadowMap.enabled = true; // по умолчанию false
+
+// для света можно поставить такие размеры shadowMap
+light.shadow.mapSize.width = 1024;
+light.shadow.mapSize.height = 1024;
+
+light.shadow.camera.top = value;
+light.shadow.camera.right = value;
+light.shadow.camera.bototm = value;
+light.shadow.camera.left = value;
+light.shadow.camera.near = value;
+light.shadow.camera.far = value;
+// если тень обрезана, проверь, может нужно увеличить какой-то из данных показателей
+
+// здесь добавляем cameraHelper, который показывает действие камеры для создания shadowMap
+const lightCameraHelper = new THREE.CameraHelper(light.shadow.camera);
+scene.add(lighrCameraHelper);
+
+// хелпер можно скрыть как Object3D
+lightCameraHelper.visible = false;
+
+// для тени можно задать радиус размытия
+light.shadow.radius = val;
+
+
 
 ```
 

@@ -518,6 +518,9 @@ geometry.setAttribute('position', posAtt);
 // Здесь position по-любому так написать надо, т.к. этот параметр используется в шейдере.
 ```
 
+Чтобы удалить буфферную геометрию или материал из памяти, нужен метод `dispose()`.
+Но для мэша или точек этот метод не подойдет.
+
 **Свойства**
 
 ```javascript
@@ -591,6 +594,15 @@ let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребе
 
 ### Материал
 [Вернуться к содержанию][toc]
+
+* **Color**
+
+**Методы**
+
+```javascript
+.lerp(toColor, ratio); // это интерполирует цвета от изначального к toColor с соотношением ratio
+```
+
 
 * **MeshBasicMaterial**
 
@@ -806,6 +818,9 @@ scene.fog = new THREE.Fog();
 
 // Редактировать экспоненциальный туман
 scene.fog = new THREE.FogExp2();
+
+// Удалить объект из сцены
+scene.remove(object);
 
 ```
 

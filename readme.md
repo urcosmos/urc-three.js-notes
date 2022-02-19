@@ -26,6 +26,7 @@
   * [Кватернион](#кватернион)
   * [Лоадер](#лоадер)
   * [Рендер](#рендер)
+  * [Raycaster](#raycaster)
   * [Дополнительные модули](#дополнительные-модули)
 
 ## Вступление
@@ -602,7 +603,6 @@ let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребе
 ```javascript
 .lerp(toColor, ratio); // это интерполирует цвета от изначального к toColor с соотношением ratio
 ```
-
 
 * **MeshBasicMaterial**
 
@@ -1264,6 +1264,33 @@ const fontLoader = new FontLoader();
 fontLoader.load(path_to_font, func1, func2, func3);
 ```
 
+### Raycaster
+[Вернуться к содержанию][toc]
+
+Луч, который помогает определить пересечение объектов на своем пересечении. Направление всегда нужно нормализовывать.
+
+```javascript
+const raycaster = new THREE.Raycaster();
+
+// Делаем точку откуда пойдет луч
+const rayOrigin = new THREE.Vector3(-3, 0, 0);
+// Делаем направление для луча
+const rayDirection = new THREE.Vector3(10, 0, 0);
+// Обязательно потом нормализуем вектор направления луча
+rayDirection.normalize();
+// Задаем эти настройки нашему лучу
+raycaster.set(rayOrigin, rayDirection);
+
+// тестируем пересечение с одним объектом
+const intersection = raycaster.intersectObject(object);
+// ИЛИ
+// тестуируем пересечение с несколькими объектами
+const intersects = raycaster.intersectObjects([object1, object2, objectN]);
+
+// для задания рейкастера из камеры. Помещается в каждый фрейм. mouseCoords должны быть от -1 до 1 (слева направо, снизу вверх)
+raycaster.setFromCamera(mouseCoords, camera);
+```
+
 ### Рендер
 [Вернуться к содержанию][toc]
 
@@ -1274,12 +1301,19 @@ fontLoader.load(path_to_font, func1, func2, func3);
 Рендер на технологии WebGL. В примере ниже рендереру задают размеры как DOM-элементу и добавляют на страницу в body. По поводу рекурсии посмотри еще как это в уроке 2 было [сделано](#lesson-3-renderer-recursion-update-function).
 
 ```javascript
-let renderer = new THREE.WebGLRenderer();
+let renderer = new THREE.WebGLRenderer(
+  canvas: canvas,
+  alpha: true // default 0
+);
 
 // задаем размер рендерера (канваса)
 renderer.setSize(window.innerWidth, window.innerHeight);
 // и добавляем его на страницу
 document.body.appendChild(renderer.domElement);
+
+// Задать прозрачность 0 - прозрачный, 1 - непрозрачный, промежуточные значения могут быть
+renderer.setAlpha(0);
+
 ```
 
 ```javascript

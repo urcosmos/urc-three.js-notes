@@ -1265,6 +1265,21 @@ const fontLoader = new FontLoader();
 fontLoader.load(path_to_font, func1, func2, func3);
 ```
 
+* **GLTFLoader**
+
+Лоадре для `.gltf` моделей.
+
+```javascript
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+const gltfLoader = new GLTFLoader();
+// 1. Путь к загружаемой модели
+// 2. Функция, которая выполнится после загрузки модели в случае успеха
+// 3. Функция, которая выполнится во время загрузки (прогресс)
+// 4. Функция, которая выполнится в случае ошибки
+gltfLoader.load(path_to_gltf_model, func1(arg), func2(arg), func3(arg));
+```
+
 ### Raycaster
 [Вернуться к содержанию][toc]
 

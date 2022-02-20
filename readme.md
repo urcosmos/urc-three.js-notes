@@ -1280,6 +1280,10 @@ const gltfLoader = new GLTFLoader();
 gltfLoader.load(path_to_gltf_model, func1(arg), func2(arg), func3(arg));
 ```
 
+* **DRACOLoader**
+
+Лоадре для `.gltf` моделей с компрессией `.bin` файлов (геометрия) по алгоритму DRACO.
+
 ### Raycaster
 [Вернуться к содержанию][toc]
 

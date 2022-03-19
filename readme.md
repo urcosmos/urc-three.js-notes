@@ -608,7 +608,7 @@ let sphereGeometry = new THREE.SphereGeometry(радиус, кол-во ребе
 
 * **MeshBasicMaterial**
 
-Аналог MeshStandartMaterial, но у него нет flatShading. И ему нужен свет.
+Аналог MeshStandartMaterial, но у него нет flatShading. И ему не нужен свет.
 
 * **MeshStandartMaterial**
 
@@ -1127,6 +1127,9 @@ let direction = new THREE.Vector3d();
 
 // Нормирование вектора
 .normilize();
+
+// Проецирование 3д координат на 2д плоскость экрана девайса, на котором открыт сайт
+.poject(camera);
 
 // Задать позицию вектора, в числах
 .set(x, y, z);

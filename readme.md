@@ -1327,7 +1327,8 @@ raycaster.setFromCamera(mouseCoords, camera);
 ```javascript
 let renderer = new THREE.WebGLRenderer(
   canvas: canvas,
-  alpha: true // default 0
+  alpha: true, // default 0
+  antialias: true // для сглаживания краев объектов. Стоит использовать на простых сценах
 );
 
 // задаем размер рендерера (канваса)

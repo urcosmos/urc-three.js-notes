@@ -1361,7 +1361,9 @@ function update() {
 .setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // Задать цвет фона
-.setClearColor('#000000')
+.setClearColor('#000000');
+// или
+.setClearColor(0x000000, 1); // здесь 2й параметр это прозрачность. Чтобы работало, нужно включить альфу в рендерере
 
 // Задать размеры
 .setSize(sizes.width, sizes.height)

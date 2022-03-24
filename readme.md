@@ -1272,6 +1272,14 @@ const fontLoader = new FontLoader();
 fontLoader.load(path_to_font, func1, func2, func3);
 ```
 
+* **JSONLoader**
+
+Лоадер для `.json` файлов.
+
+```javascript
+const loader = new THREE.ObjectLoader();
+```
+
 * **GLTFLoader**
 
 Лоадре для `.gltf` моделей.
@@ -1432,6 +1440,9 @@ https://jsfiddle.net/ikatyang/182ztwao/
 ### Форматы
 [Вернуться к содержанию][toc]
 
+* **JSON**
+
+
 * **GLTF**
 
 **GLTF-default**
@@ -1460,6 +1471,15 @@ https://jsfiddle.net/ikatyang/182ztwao/
 
 ### Полезные приемы
 [Вернуться к содержанию][toc]
+
+* **GLTF**
+
+```javascript
+// функция плавного перехода
+function lerp(start, finish, progress){
+  return start + progress * (finish - start);
+}
+```
 
 <!-- Ссылки -->
 [toc]: #содержание
